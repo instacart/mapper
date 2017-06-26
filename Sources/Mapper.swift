@@ -164,6 +164,39 @@ public struct Mapper {
     }
 
     /**
+     Get an array of Mappable values from the given field in the source data
+
+     This allows you to transparently have nested arrays of Mappable values
+
+     - If any value in the array of NSDictionaries is invalid, this invokes the given fallback closure
+     and rethrows only if it does.
+
+     - parameter field: The field to retrieve from the source data, can be an empty string to return the
+                        entire data set
+
+     - throws: MapperError.MissingFieldError if the field doesn't exist
+     - throws: MapperError.TypeMismatchError if the field exists but isn't an array of NSDictionarys
+     - throws: Any errors produced by the subsequent Mappable initializers
+
+     - returns: The value for the given field, if it can be converted to the expected type [T]
+     */
+    @warn_unused_result
+    public func from<T: Mappable>(field: String, fallback: ((AnyObject, ErrorType) throws -> T?)) throws -> [T] {
+        let value = try self.JSONFromField(field)
+        if let JSON = value as? [NSDictionary] {
+            return try JSON.flatMap { value in
+                do {
+                    return try T(map: Mapper(JSON: value))
+                } catch {
+                    return try fallback(value, error)
+                }
+            }
+        }
+
+        throw MapperError.TypeMismatchError(field: field, value: value, type: [NSDictionary].self)
+    }
+
+    /**
      Get an optional Mappable value from the given field in the source data
 
      This allows you to transparently have nested Mappable values

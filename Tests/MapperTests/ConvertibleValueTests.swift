@@ -128,6 +128,30 @@ final class ConvertibleValueTests: XCTestCase {
         XCTAssertNil(test.URL)
     }
 
+    func testConvertibleArrayOfKeysDoesNotThrow() {
+        struct Test: Mappable {
+            let string: String
+            init(map: Mapper) throws {
+                try self.string = map.from(["a", "b"])
+            }
+        }
+
+        let test = try? Test(map: Mapper(JSON: ["b": "someValue"]))
+        XCTAssertTrue(test?.string == "someValue")
+    }
+
+    func testConvertibleArrayOfKeysThrowsWhenMissing() {
+        struct Test: Mappable {
+            let string: String
+            init(map: Mapper) throws {
+                try self.string = map.from(["a", "b"])
+            }
+        }
+
+        let test = try? Test(map: Mapper(JSON: [:]))
+        XCTAssertNil(test)
+    }
+
     func testDictionaryConvertible() {
         struct Test: Mappable {
             let dictionary: [String: Int]
@@ -191,7 +215,7 @@ final class ConvertibleValueTests: XCTestCase {
 
         do {
             let test = try Test(map: Mapper(JSON: ["foo": ["key": "value"]]))
-            XCTAssertTrue(test.dictionary.count > 0)
+            XCTAssertFalse(test.dictionary.isEmpty)
         } catch {
             XCTFail("Failed to create test")
         }
@@ -238,5 +262,35 @@ final class ConvertibleValueTests: XCTestCase {
 
         let test = Test.from(["foo": "not a dictionary"])
         XCTAssertNil(test)
+    }
+
+    func testFloatDirectly() throws {
+        let float: Float = 1.1
+        let value = try Float.fromMap(float)
+        XCTAssertEqual(value, 1.1)
+    }
+
+    func testConvertingFloat() throws {
+        struct Test: Mappable {
+            let float: Float
+            init(map: Mapper) throws {
+                try self.float = map.from("float")
+            }
+        }
+
+        let test = try Test(map: Mapper(JSON: ["float": 1.1]))
+        XCTAssertEqual(test.float, 1.1)
+    }
+
+    func testConvertingNonFloat() throws {
+        struct Test: Mappable {
+            let float: Float?
+            init(map: Mapper) {
+                self.float = map.optionalFrom("float")
+            }
+        }
+
+        let test = Test(map: Mapper(JSON: ["float": "not float"]))
+        XCTAssertNil(test.float)
     }
 }

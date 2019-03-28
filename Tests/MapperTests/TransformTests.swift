@@ -32,8 +32,7 @@ final class TransformTests: XCTestCase {
         }
 
         let JSON: NSDictionary = [
-            "examples":
-            [
+            "examples": [
                 [
                     "string": "hi",
                     "value": 1,
@@ -42,7 +41,7 @@ final class TransformTests: XCTestCase {
                     "string": "bye",
                     "value": 2,
                 ],
-            ]
+            ],
         ]
 
         let test = Test.from(JSON)
@@ -63,12 +62,12 @@ final class TransformTests: XCTestCase {
 
         do {
             _ = try Test(map: Mapper(JSON: ["examples": 1]))
-            XCTFail()
+            XCTFail("Should have thrown")
         } catch MapperError.convertibleError(let value, let type) {
             XCTAssert(value as? Int == 1)
             XCTAssert(type == [NSDictionary].self)
         } catch {
-            XCTFail()
+            XCTFail("Expected convertibleError")
         }
     }
 
@@ -83,16 +82,15 @@ final class TransformTests: XCTestCase {
         }
 
         let JSON: NSDictionary = [
-            "examples":
-            [
+            "examples": [
                 [
                     "string": "hi",
                     "value": 1,
                 ],
                 [
                     "string": "bye",
-                ]
-            ]
+                ],
+            ],
         ]
 
         let test = try? Test(map: Mapper(JSON: JSON))
@@ -103,11 +101,11 @@ final class TransformTests: XCTestCase {
         do {
             let map = Mapper(JSON: [:])
             let _: String = try map.from("foo", transformation: { _ in return "hi" })
-            XCTFail()
+            XCTFail("Should have thrown")
         } catch MapperError.missingFieldError(let field) {
             XCTAssert(field == "foo")
         } catch {
-            XCTFail()
+            XCTFail("Expected missingFieldError")
         }
     }
 }

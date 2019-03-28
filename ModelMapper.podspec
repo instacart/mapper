@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                      = "ModelMapper"
-  s.version                   = "6.0.0"
+  s.version                   = "9.0.1"
   s.summary                   = "A JSON deserialization library for Swift"
   s.homepage                  = "https://github.com/lyft/mapper"
   s.license                   = "Apache License, Version 2.0"
@@ -12,6 +12,15 @@ Pod::Spec.new do |s|
   s.source                    = { :git => "https://github.com/lyft/mapper.git",
                                   :tag => s.version.to_s }
   s.requires_arc              = true
-  s.source_files              = "Sources/**/*.swift"
   s.module_name               = "Mapper"
+  s.default_subspec           = "Core"
+
+  s.subspec "Core" do |core|
+    core.source_files = "Sources/**/*.swift"
+  end
+
+  s.subspec "NoConvertibles" do |noconvertibles|
+    noconvertibles.source_files = "Sources/**/*.swift"
+    noconvertibles.exclude_files = "Sources/**/*+Convertible.swift"
+  end
 end

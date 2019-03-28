@@ -52,7 +52,6 @@ final class MappableValueTests: XCTestCase {
             init(map: Mapper) {}
         }
 
-
         let test = Test(map: Mapper(JSON: [:]))
         XCTAssertNil(test.nest)
     }
@@ -169,5 +168,43 @@ final class MappableValueTests: XCTestCase {
         } else {
             XCTFail("Failed to create Test")
         }
+    }
+
+    func testMappableArrayOfKeysDoesNotThrow() {
+        struct Test: Mappable {
+            let nest: Nested
+            init(map: Mapper) throws {
+                try self.nest = map.from(["a", "b"])
+            }
+        }
+
+        struct Nested: Mappable {
+            let string: String
+            init(map: Mapper) throws {
+                try self.string = map.from("string")
+            }
+        }
+
+        let test = try? Test(map: Mapper(JSON: ["b": ["string": "hi"]]))
+        XCTAssertTrue(test?.nest.string == "hi")
+    }
+
+    func testMappableArrayOfKeysThrowsWhenMissing() {
+        struct Test: Mappable {
+            let nest: Nested
+            init(map: Mapper) throws {
+                try self.nest = map.from(["a", "b"])
+            }
+        }
+
+        struct Nested: Mappable {
+            let string: String
+            init(map: Mapper) throws {
+                try self.string = map.from("string")
+            }
+        }
+
+        let test = try? Test(map: Mapper(JSON: [:]))
+        XCTAssertNil(test)
     }
 }

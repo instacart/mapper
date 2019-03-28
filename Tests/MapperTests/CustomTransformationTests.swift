@@ -7,8 +7,8 @@ final class CustomTransformationTests: XCTestCase {
             let value: Int
             init(map: Mapper) throws {
                 value = try map.from("value", transformation: { thing in
-                    if let a = thing as? Int {
-                        return a + 1
+                    if let thing = thing as? Int {
+                        return thing + 1
                     } else {
                         return 0
                     }
@@ -24,7 +24,7 @@ final class CustomTransformationTests: XCTestCase {
         struct Test: Mappable {
             let value: Int
             init(map: Mapper) throws {
-                try value = map.from("foo", transformation: { object in
+                try value = map.from("foo", transformation: { _ in
                     throw MapperError.customError(field: nil, message: "")
                 })
             }
@@ -71,6 +71,118 @@ final class CustomTransformationTests: XCTestCase {
         do {
             let test = try Test(map: Mapper(JSON: [:]))
             XCTAssertNil(test.string)
+        } catch {
+            XCTFail("Shouldn't have failed to create Test")
+        }
+    }
+
+    func testCustomTransformationArrayOfKeys() {
+        struct Test: Mappable {
+            let value: Int
+            init(map: Mapper) throws {
+                value = try map.from(["a", "b"], transformation: { thing in
+                    if let thing = thing as? Int {
+                        return thing + 1
+                    }
+                    throw MapperError.customError(field: nil, message: "")
+                })
+            }
+        }
+
+        do {
+            let test = try Test(map: Mapper(JSON: ["a": "##", "b": 1]))
+            XCTAssertEqual(test.value, 2)
+        } catch {
+            XCTFail("Shouldn't have failed to create Test")
+        }
+    }
+
+    func testCustomTransformationArrayOfKeysThrows() {
+        struct Test: Mappable {
+            let value: Int
+            init(map: Mapper) throws {
+                value = try map.from(["a", "b"], transformation: { _ in
+                    throw MapperError.customError(field: nil, message: "")
+                })
+            }
+        }
+
+        let test = try? Test(map: Mapper(JSON: ["a": "##", "b": 1]))
+        XCTAssertNil(test)
+    }
+
+    func testOptionalCustomTransformationEmptyThrows() {
+        struct Test: Mappable {
+            let value: Int
+            init(map: Mapper) throws {
+                value = try map.from(["a", "b"], transformation: { thing in
+                    if let thing = thing as? Int {
+                        return thing + 1
+                    }
+                    throw MapperError.customError(field: nil, message: "")
+                })
+            }
+        }
+
+        let test = try? Test(map: Mapper(JSON: [:]))
+        XCTAssertNil(test)
+    }
+
+    func testOptionalCustomTransformationArrayOfKeys() {
+        struct Test: Mappable {
+            let value: Int?
+            init(map: Mapper) throws {
+                value = map.optionalFrom(["a", "b"], transformation: { thing in
+                    if let thing = thing as? Int {
+                        return thing + 1
+                    }
+                    throw MapperError.customError(field: nil, message: "")
+                })
+            }
+        }
+
+        do {
+            let test = try Test(map: Mapper(JSON: ["a": "##", "b": 1]))
+            XCTAssertEqual(test.value, 2)
+        } catch {
+            XCTFail("Shouldn't have failed to create Test")
+        }
+    }
+
+    func testOptionalCustomTransformationArrayOfKeysFails() {
+        struct Test: Mappable {
+            let value: Int?
+            init(map: Mapper) throws {
+                value = map.optionalFrom(["a", "b"], transformation: { _ in
+                    throw MapperError.customError(field: nil, message: "")
+                })
+            }
+        }
+
+        do {
+            let test = try Test(map: Mapper(JSON: ["a": "##", "b": 1]))
+            XCTAssertNil(test.value)
+        } catch {
+            XCTFail("Shouldn't have failed to create Test")
+        }
+    }
+
+    func testOptionalCustomTransformationArrayOfKeysReturnsNil() {
+        struct Test: Mappable {
+            let value: Int?
+            init(map: Mapper) throws {
+                value = map.optionalFrom(["a", "b"], transformation: { thing in
+                    if let thing = thing as? Int {
+                        return thing + 1
+                    }
+                    throw MapperError.customError(field: nil, message: "")
+                })
+            }
+        }
+
+        do {
+            let test = try Test(map: Mapper(JSON: [:]))
+            XCTAssertNil(test.value)
         } catch {
             XCTFail("Shouldn't have failed to create Test")
         }

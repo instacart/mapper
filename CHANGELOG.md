@@ -1,4 +1,4 @@
-# Master
+# master
 
 ## Breaking
 
@@ -7,6 +7,138 @@
 ## Enhancements
 
 - None
+
+# 9.0.1
+
+## Breaking
+
+- None
+
+## Enhancements
+
+- Add NoConvertibles subspec
+  [Keith Smiley](https://github.com/keith)
+  [#156](https://github.com/lyft/mapper/pull/156)
+
+# 9.0.0
+
+## Breaking
+
+- Update tooling for Swift 4.2
+  [Keith Smiley](https://github.com/keith)
+  [#148](https://github.com/lyft/mapper/pull/148)
+
+## Enhancements
+
+- None
+
+# 8.1.0
+
+## Breaking
+
+- None
+
+## Enhancements
+
+- Fix `Float` behavior for some values
+  [Keith Smiley](https://github.com/keith)
+  [#142](https://github.com/lyft/mapper/pull/142)
+
+# 8.0.0
+
+## Breaking
+
+- Update for Swift 4.1 and `compactMap`
+  [Keith Smiley](https://github.com/keith)
+  [#136](https://github.com/lyft/mapper/pull/136)
+
+## Enhancements
+
+- None
+
+# 7.4.1
+
+## Breaking
+
+- None
+
+## Enhancements
+
+- Updated watchOS and macOS deployment target in xcodeproj to match these from podspec
+  [Łukasz Mróz](https://github.com/sunshinejr)
+  [#134](https://github.com/lyft/mapper/pull/134)
+
+# 7.4.0
+
+## Breaking
+
+- None
+
+## Enhancements
+
+- Support `from` Array of Fields for Custom Transformation
+  [Brett Jones](https://github.com/brodney)
+  [#131](https://github.com/lyft/mapper/pull/131)
+
+## Bug Fixes
+
+- Fix the App Store submission issue with Carthage and coverage data described [here](https://github.com/Carthage/Carthage/issues/2056).
+
+# 7.3.0
+
+## Breaking
+
+- None
+
+## Enhancements
+
+- Add `optionalFrom` for arrays of `RawRepresentable`s
+  [Keith Smiley](https://github.com/keith)
+  [#125](https://github.com/lyft/mapper/pull/125)
+- Support non-optional mapping from list of fields
+  [Michael Rebello](https://github.com/rebello95)
+  [#126](https://github.com/lyft/mapper/pull/126)
+
+# 7.2.0
+
+## Breaking
+
+- None
+
+## Enhancements
+
+- Support Array Of Fields For Custom Transformation
+  [Daniel Duan](https://github.com/dduan)
+  [#120](https://github.com/lyft/mapper/pull/120)
+
+# 7.1.0
+
+## Breaking
+
+- None
+
+## Enhancements
+
+- Remove call to characters on string
+  [Keith Smiley](https://github.com/keith)
+  [#116](https://github.com/lyft/mapper/pull/116)
+- Add Convertible implementations for `U?Int(32|64)`
+  [Daniel Duan](https://github.com/dduan)
+  [#117](https://github.com/lyft/mapper/pull/117)
+
+# 7.0.0
+
+## Breaking
+
+- Update for Swift 4
+  [Keith Smiley](https://github.com/keith)
+  [#113](https://github.com/lyft/mapper/pull/113)
+
+## Enhancements
+
+- Add `@nonobjc` to our `NSDictionary` extension
+  [Keith Smiley](https://github.com/keith)
+  [#107](https://github.com/lyft/mapper/pull/107)
 
 ## Bug Fixes
 
@@ -24,7 +156,7 @@
 
 - Add JSONSerialization integration tests
   [Keith Smiley](https://github.com/keith)
-  [#76](https://github.com/lyft/mapper/pull/90)
+  [#90](https://github.com/lyft/mapper/pull/90)
 - Test with optimizations
   [Keith Smiley](https://github.com/keith)
   [#92](https://github.com/lyft/mapper/pull/92)
@@ -51,7 +183,9 @@
 
 ## Enhancements
 
-- None
+- Remove duplicate `Hashable` protocol conformance
+  [Keith Smiley](https://github.com/keith)
+  [#108](https://github.com/lyft/mapper/pull/108)
 
 ## Bug Fixes
 

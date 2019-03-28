@@ -18,8 +18,8 @@
 .LSOverride
 build/
 Carthage/Build
-coverage.txt
 DerivedData
 Icon
+Pods
 run-tests
 xcuserdata
